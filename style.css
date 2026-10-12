@@ -1,6 +1,13 @@
-.body{
-    background-image: url('bg.jpg');
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+}
+body{
+    background-image: url('bg.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
 }
