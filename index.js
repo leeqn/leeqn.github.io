@@ -83,7 +83,7 @@ function renderMovies() {
                 <div class="upload-badge">Вставить ссылку</div>
             </div>
             <figcaption>
-                <div class="editable title" contenteditable="true" data-index="${index}" data-field="title">${movie.title}</div>
+                <div class="editable title" contenteditable="true" data-index="${index}" data-field="title"><nobr>${movie.title}</nobr></div>
                 <div>Liza: <span class="editable" contenteditable="true" data-index="${index}" data-field="lizaScore">${movie.lizaScore}</span>/10</div>
                 <div>Danya: <span class="editable" contenteditable="true" data-index="${index}" data-field="danyaScore">${movie.danyaScore}</span>/10</div>
             </figcaption>
