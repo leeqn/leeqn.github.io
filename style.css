@@ -1,3 +1,6 @@
+.section {
+    min-height: 80vh;
+}
 .square-box {
     margin-top: -3%;
     margin-left: 12%;
@@ -12,21 +15,17 @@
     box-sizing: border-box;
     font-size: 20px;
 }
-
-h1{
-    font-size: 100px;
-    text-align: left;
-    margin-top: 16%;
-    margin-left: 12%;
+.image-grid {
+    margin-left: 5%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+    gap: 70px 0;
 }
-h2{
-     font-weight: normal;
- }
-h3{
-    color: #4b2b15;
-    font-size: 30px;
-    margin-top:5%;
-    margin-left:12%;
+.image-grid img{
+    border: 3px solid black;
+    border-radius: 8px;
+    padding: 4px;
+    background-color: saddlebrown;
 }
 html, body {
     margin: 0;
