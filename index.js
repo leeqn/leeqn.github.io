@@ -4,7 +4,7 @@ const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
 const defaultState = {
     dates: "21.10.2026 -",
-    movies: Array.from({ length: 16 }, (_, index) => ({
+    movies: Array.from({ length: 18 }, (_, index) => ({
         id: index + 1,
         title: `FILM TITLE ${index + 1}`,
         lizaScore: '?',

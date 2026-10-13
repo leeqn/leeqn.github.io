@@ -16,11 +16,19 @@
     font-size: 20px;
 }
 .image-grid {
-    margin-left: auto;
+    margin-left: 8%;
+    width: calc(100% - 17%); /* 12% отступ слева + 5% запас справа */
+
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
-    gap: 70px 0;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 40px 20px;
     font-weight: bold;
+    box-sizing: border-box;
+}
+
+.image-grid figure {
+    margin: 0;
+    width: 100%;
 }
 .image-grid img{
     border: 3px solid black;
