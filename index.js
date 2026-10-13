@@ -1,3 +1,8 @@
+const BIN_ID = '6ace60e3ffd5d1605367f52b';
+const API_KEY = '$2a$10$usYzFIuYVOW9ncp/O66FtOEqbCD1QSjoJzziLoYg1vzj3QYoJC1pm';
+
+const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
 const defaultMovies = Array.from({ length: 16 }, (_, index) => ({
     id: index + 1,
     title: `FILM TITLE ${index + 1}`,
@@ -6,33 +11,63 @@ const defaultMovies = Array.from({ length: 16 }, (_, index) => ({
     imgSrc: 'blank.png'
 }));
 
-let movies = JSON.parse(localStorage.getItem('movieCollection')) || defaultMovies;
-
+let movies = defaultMovies;
 const grid = document.getElementById('movieGrid');
 const datesText = document.getElementById("datesText");
 
+async function loadDataFromCloud() {
+    try {
+        const response = await fetch(`${API_URL}/latest`, {
+            method: 'GET',
+            headers: {
+                'X-Master-Key': API_KEY
+            }
+        });
+        const result = await response.json();
+
+        if (result.record) {
+            if (result.record.movies) movies = result.record.movies;
+            if (result.record.dates && datesText) datesText.textContent = result.record.dates;
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки из облака:', error);
+    } finally {
+        renderMovies();
+    }
+}
+
+async function saveDataToCloud() {
+    const dates = datesText ? datesText.textContent.trim() : '';
+
+    try {
+        await fetch(API_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': API_KEY
+            },
+            body: JSON.stringify({
+                dates: dates,
+                movies: movies
+            })
+        });
+        console.log('Данные успешно сохранены в облако!');
+    } catch (error) {
+        console.error('Ошибка сохранения в облако:', error);
+    }
+}
+
 if (datesText) {
-    const savedDates = localStorage.getItem("marathonDates");
-
-    if (savedDates) {
-        datesText.textContent = savedDates;
-    }
-
-    function saveDates() {
-        const currentText = datesText.textContent.trim();
-        localStorage.setItem("marathonDates", currentText);
-    }
-
     datesText.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
             event.preventDefault();
-            saveDates();
+            saveDataToCloud();
             datesText.blur();
         }
     });
 
     datesText.addEventListener("blur", () => {
-        saveDates();
+        saveDataToCloud();
     });
 }
 
@@ -45,10 +80,10 @@ function renderMovies() {
         figure.innerHTML = `
             <div class="image-container" data-index="${index}">
                 <img src="${movie.imgSrc}" alt="${movie.title}" class="movie-img">
-                <div class="upload-badge"></div>
+                <div class="upload-badge">Вставить ссылку</div>
             </div>
             <figcaption>
-                <div class="editable title" contenteditable="true" data-index="${index}" data-field="title"><nobr>${movie.title}</nobr></div>
+                <div class="editable title" contenteditable="true" data-index="${index}" data-field="title">${movie.title}</div>
                 <div>Liza: <span class="editable" contenteditable="true" data-index="${index}" data-field="lizaScore">${movie.lizaScore}</span>/10</div>
                 <div>Danya: <span class="editable" contenteditable="true" data-index="${index}" data-field="danyaScore">${movie.danyaScore}</span>/10</div>
             </figcaption>
@@ -77,7 +112,7 @@ function attachEditListeners() {
             const newValue = element.textContent.trim();
 
             movies[index][field] = newValue;
-            saveToLocalStorage();
+            saveDataToCloud();
         });
     });
 }
@@ -93,15 +128,11 @@ function attachImageUrlListeners() {
 
             if (newUrl !== null && newUrl.trim() !== '') {
                 movies[index].imgSrc = newUrl.trim();
-                saveToLocalStorage();
                 renderMovies();
+                saveDataToCloud();
             }
         });
     });
 }
 
-function saveToLocalStorage() {
-    localStorage.setItem('movieCollection', JSON.stringify(movies));
-}
-
-renderMovies();
+loadDataFromCloud();
